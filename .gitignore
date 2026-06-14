@@ -9,5 +9,8 @@ README.md
 .DS_Store
 Thumbs.db
 
+# Ignore build output
+.next/
+
 # Ignore log files
 *.log
