@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: 255 247 214;
+  --ink: 18 18 18;
+  --accent: 255 75 31;
+  --card: 255 247 214;
+  --muted: 89 80 67;
+  --font-serif: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: rgb(var(--paper));
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: rgb(var(--paper));
+  color: rgb(var(--ink));
+  font-family: var(--font-serif);
+  image-rendering: pixelated;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgb(var(--accent));
+  color: white;
+}
+
+.journal-rule {
+  background: repeating-linear-gradient(
+    90deg,
+    rgb(var(--ink)) 0 8px,
+    transparent 8px 14px
+  );
+  height: 2px;
+}
+
+.pixel-panel {
+  border: 2px solid rgb(var(--ink));
+  background: rgb(var(--card));
+  box-shadow: 6px 6px 0 rgb(var(--ink));
+}
+
+.pixel-panel-accent {
+  border: 2px solid rgb(var(--ink));
+  background: rgb(var(--accent));
+  color: rgb(var(--paper));
+  box-shadow: 6px 6px 0 rgb(var(--ink));
+}
+
+.pixel-button {
+  border: 2px solid rgb(var(--ink));
+  background: rgb(var(--paper));
+  color: rgb(var(--ink));
+  box-shadow: 3px 3px 0 rgb(var(--ink));
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.pixel-button:hover,
+.pixel-button:focus-visible {
+  background: rgb(var(--accent));
+  color: rgb(var(--paper));
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgb(var(--ink));
+}
+
+.pixel-button-solid {
+  border: 2px solid rgb(var(--ink));
+  background: rgb(var(--ink));
+  color: rgb(var(--paper));
+  box-shadow: 3px 3px 0 rgb(var(--accent));
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.pixel-button-solid:hover,
+.pixel-button-solid:focus-visible {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgb(var(--accent));
+}
+
+.pixel-grid {
+  background-image:
+    linear-gradient(rgb(var(--ink) / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ink) / 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+}

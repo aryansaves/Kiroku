@@ -1,0 +1,105 @@
+export type MediaType =
+  | "anime"
+  | "movie"
+  | "book"
+  | "manga"
+  | "game"
+  | "music"
+  | "podcast";
+
+export type LogStatus =
+  | "watching"
+  | "completed"
+  | "dropped"
+  | "planned"
+  | "rewatching";
+
+export type JournalLayout = "grid" | "feed" | "masonry";
+
+export type Theme = {
+  colorScheme: {
+    background: string;
+    text: string;
+    accent: string;
+    card: string;
+  };
+  font: string;
+  layout: JournalLayout;
+  customCss: string;
+  stickers: Sticker[];
+  nowPlaying: {
+    url: string | null;
+    source: "spotify" | "soundcloud" | "youtube" | null;
+  };
+  guestbookEnabled: boolean;
+};
+
+export type Sticker = {
+  id: string;
+  src: string;
+  x: number;
+  y: number;
+  size: number;
+  rotation: number;
+};
+
+export type PublicUser = {
+  _id: string;
+  username: string;
+  displayName: string;
+  bio: string;
+  links: Array<{ label: string; url: string }>;
+  avatarUrl: string | null;
+  platforms?: {
+    mal?: { linked: boolean };
+    anilist?: { linked: boolean };
+  };
+  theme: Theme;
+  createdAt: string;
+};
+
+export type Log = {
+  _id: string;
+  mediaType: MediaType;
+  status: LogStatus;
+  rating: number | null;
+  notes: string | null;
+  progress: {
+    episode: number | null;
+    chapter: number | null;
+    page: number | null;
+    percentage: number | null;
+  };
+  title: string;
+  coverImage: string | null;
+  externalIds?: {
+    anilistId: number | null;
+    malId: number | null;
+    tmdbId: number | null;
+  };
+  metadata: {
+    studio: string | null;
+    year: number | null;
+    episodes: number | null;
+    director: string | null;
+    runtime: number | null;
+    author: string | null;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PaginatedLogs = {
+  logs: Log[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+};
+
+export type GuestbookEntry = {
+  _id: string;
+  visitorName: string;
+  message: string;
+  createdAt: string;
+};
