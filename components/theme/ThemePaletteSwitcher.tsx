@@ -83,11 +83,11 @@ const STORAGE_KEY = "kiroku.palette";
 
 function applyColors(colors: ColorSet) {
   const root = document.documentElement;
-  root.style.setProperty("--paper", colors.paper);
-  root.style.setProperty("--ink", colors.ink);
-  root.style.setProperty("--accent", colors.accent);
-  root.style.setProperty("--card", colors.card);
-  root.style.setProperty("--muted", colors.muted);
+  root.style.setProperty("--paper", colors.paper, "important");
+  root.style.setProperty("--ink", colors.ink, "important");
+  root.style.setProperty("--accent", colors.accent, "important");
+  root.style.setProperty("--card", colors.card, "important");
+  root.style.setProperty("--muted", colors.muted, "important");
 }
 
 export function ThemePaletteSwitcher({ terse = false }: { terse?: boolean }) {
