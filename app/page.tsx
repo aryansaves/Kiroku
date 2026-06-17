@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Bot, Palette, Radio } from "lucide-react";
+import { ThemePaletteSwitcher } from "@/components/theme/ThemePaletteSwitcher";
 
 const features = [
   {
@@ -28,7 +29,8 @@ export default function HomePage() {
           <Link href="/" className="text-base font-black uppercase tracking-wider">
             KIROKU
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <ThemePaletteSwitcher terse />
             <Link
               href="/login"
               className="px-3 py-2 text-xs font-bold uppercase text-ink hover:bg-ink hover:text-paper"

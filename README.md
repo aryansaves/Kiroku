@@ -108,15 +108,59 @@ npm run dev
 # Frontend starts on http://localhost:3001
 ```
 
-### 4. Verify
+### 4. Create a dev user (pick one)
+
+**Option A — Seed script (recommended)**
+```bash
+# From kiroku-f/
+npm install --save-dev mongodb
+source ../kiroku-api/.env    # or set MONGODB_URI manually
+node scripts/seed-dev-user.mjs myuser "My Name"
+```
+
+**Option B — Telegram bot**
+```bash
+# Start API with bot enabled (terminal 2)
+ENABLE_BOT=true bun run src/index.ts
+# Then send /start to your Telegram bot
+# Then send /username myuser
+```
+
+**Option C — mongosh (MongoDB Shell)**
+```js
+mongosh <your-atlas-uri>
+> use kiroku
+> db.users.insertOne({
+    telegramId: "dev_manual",
+    username: "myuser",
+    displayName: "Dev User",
+    bio: "Local test.",
+    links: [], avatarUrl: null,
+    theme: { colorScheme: { background:"#faf8f0", text:"#16141c", accent:"#dc8719", card:"#f5f2e8" }, font:"var(--font-serif)", layout:"grid", customCss:"", stickers:[], nowPlaying:{url:null,source:null}, guestbookEnabled:true },
+    createdAt: new Date(), updatedAt: new Date()
+  })
+```
+
+### 5. Login
+
+```bash
+open http://localhost:3001/login
+# Type your username in the "Local username" field → "Use dev login"
+# You should be redirected to /settings
+```
+
+> Make sure `ENABLE_DEV_AUTH=true` is set in kiroku-api `.env`.
+
+### 6. Verify Full Stack
 
 ```bash
 # Check API health
-curl http://localhost:3000/users/demo
+curl http://localhost:3000/users/myuser
 
-# Open frontend
-open http://localhost:3001        # landing page
-open http://localhost:3001/u/demo # demo journal (uses mock data by default)
+# Open frontend pages
+open http://localhost:3001           # landing page
+open http://localhost:3001/u/myuser  # your journal
+open http://localhost:3001/settings  # edit profile/theme
 ```
 
 ### Port Layout
@@ -134,7 +178,7 @@ open http://localhost:3001/u/demo # demo journal (uses mock data by default)
 | Variable | Default (dev) | Required? |
 |----------|--------------|-----------|
 | `NEXT_PUBLIC_API_BASE_URL` | `http://localhost:3000` | Yes |
-| `NEXT_PUBLIC_USE_DEMO_DATA` | `true` | No |
+| `NEXT_PUBLIC_USE_DEMO_DATA` | `false` | No |
 | `NEXT_PUBLIC_ENABLE_DEV_LOGIN` | `true` | No |
 | `NEXT_PUBLIC_TELEGRAM_BOT_NAME` | (empty) | Production only |
 | `NEXT_PUBLIC_SITE_URL` | `http://localhost:3001` | No |

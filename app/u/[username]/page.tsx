@@ -6,6 +6,7 @@ import { SongPlayer } from "@/components/profile/SongPlayer";
 import { LogGrid } from "@/components/journal/LogGrid";
 import { TypeFilter } from "@/components/journal/TypeFilter";
 import { StickerLayer } from "@/components/stickers/StickerLayer";
+import { ThemePaletteSwitcher } from "@/components/theme/ThemePaletteSwitcher";
 import { getPublicUser, getUserLogs, recentFirst } from "@/lib/api";
 import { themeVariables } from "@/lib/theme";
 import type { MediaType } from "@/lib/types";
@@ -72,7 +73,10 @@ export default async function UserJournalPage({
           <Link href="/" className="text-base font-black uppercase tracking-wider text-ink">
             KIROKU
           </Link>
-          <SongPlayer nowPlaying={user.theme.nowPlaying} />
+          <div className="flex items-center gap-3">
+            <ThemePaletteSwitcher terse />
+            <SongPlayer nowPlaying={user.theme.nowPlaying} />
+          </div>
         </header>
 
         <section className="py-10 md:py-14">
