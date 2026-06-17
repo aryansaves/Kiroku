@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | Kiroku"
   },
   description: "A personal media journal written from Telegram and read on the web.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://kiroku.com")
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://kiroku.com")
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
