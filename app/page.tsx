@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, Bot, Palette, Radio } from "lucide-react";
+import { ArrowRight, MessageSquare, Palette, Radio } from "lucide-react";
 import { ThemePaletteSwitcher } from "@/components/theme/ThemePaletteSwitcher";
 
 const features = [
   {
-    icon: Bot,
-    title: "Bot-first writing",
-    text: "Log media from Telegram. The webpage stays read-only and fast."
+    icon: MessageSquare,
+    title: "Natural language logging",
+    text: "Type what you watched or read. AI parses it and finds the right cover — from the web or via Telegram."
   },
   {
     icon: Radio,
@@ -16,7 +16,7 @@ const features = [
   {
     icon: Palette,
     title: "Custom themes",
-    text: "Colors, layout, stickers, song links, and sanitized CSS are backend-owned."
+    text: "Colors, layout, stickers, song links, and sanitized CSS are all yours to configure."
   }
 ];
 
@@ -50,7 +50,7 @@ export default function HomePage() {
         <div className="grid flex-1 place-items-center py-10">
           <div className="archive-shell w-full max-w-3xl p-6 text-center md:p-10">
             <p className="stamp-label">
-              telegram in / page out
+              log anything, share everything
             </p>
             <h1 className="mt-5 text-6xl font-black uppercase leading-none text-ink md:text-8xl">
               Shelf signal
@@ -58,7 +58,8 @@ export default function HomePage() {
             <div className="pixel-divider-light mx-auto mt-6 max-w-sm" />
             <p className="mx-auto mt-6 max-w-xl text-balance text-base font-bold leading-7 text-ink md:text-lg">
               A public media journal that feels like a stamped desk file:
-              fast pages, sharp filters, real covers, and bot-written entries.
+              fast pages, sharp filters, real covers — log from Telegram or
+              directly on the web.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link

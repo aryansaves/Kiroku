@@ -10,6 +10,8 @@
   --muted: 135 118 95;
   --font-serif: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
+  /* Force light rendering across all browsers — prevents OS dark mode bleeding */
+  color-scheme: light;
 }
 
 * {
@@ -37,8 +39,33 @@ a {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
+  /* Prevent OS/browser from overriding our styles on form controls */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Consistent scrollbars — Chrome/Edge/Safari */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--paper));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--ink) / 0.3);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--ink) / 0.6);
+}
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--ink) / 0.3) rgb(var(--paper));
 }
 
 ::selection {

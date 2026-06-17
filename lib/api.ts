@@ -1,6 +1,9 @@
 import { demoLogs, demoUser } from "@/lib/mock-data";
 import type {
   AuthSession,
+  ChatLogPayload,
+  ChatParsed,
+  ChatSearchItem,
   GuestbookEntries,
   Log,
   MediaType,
@@ -101,7 +104,7 @@ export async function apiFetch<T>(
 
 export async function getPublicUser(username: string): Promise<PublicUser> {
   try {
-    return await apiFetch<PublicUser>(`/users/${username}`, { revalidate: 60 });
+    return await apiFetch<PublicUser>(`/users/${username}`, { revalidate: 0 });
   } catch (error) {
     if (USE_DEMO) return { ...demoUser, username };
     throw error;
@@ -122,7 +125,7 @@ export async function getUserLogs(params: {
   try {
     const payload = await apiFetch<ApiPaginatedLogs>(
       `/users/${params.username}/logs?${search.toString()}`,
-      { revalidate: 30 }
+      { revalidate: 0 }
     );
     return normalizePaginatedLogs(payload);
   } catch (error) {
@@ -185,6 +188,45 @@ export async function telegramLogin(payload: unknown): Promise<AuthSession> {
   });
 }
 
+/** Returns the URL to redirect the user to for Google OAuth */
+export function googleAuthUrl(): string {
+  if (!API_BASE_URL) throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
+  return `${API_BASE_URL}/auth/google`;
+}
+
+export async function registerGoogleUser(payload: {
+  username: string;
+  displayName: string;
+  avatarUrl: string | null;
+  googlePendingToken: string;
+}): Promise<AuthSession> {
+  return apiFetch<AuthSession>("/auth/register", {
+    method: "POST",
+    body: JSON.stringify(payload),
+    revalidate: 0
+  });
+}
+
+export async function checkUsernameAvailable(username: string): Promise<boolean> {
+  try {
+    const result = await apiFetch<{ available: boolean }>(
+      `/auth/check-username?username=${encodeURIComponent(username)}`,
+      { revalidate: 0 }
+    );
+    return result.available;
+  } catch {
+    return false;
+  }
+}
+
+export async function logout(refreshToken: string): Promise<void> {
+  await apiFetch<void>("/auth/logout", {
+    method: "POST",
+    body: JSON.stringify({ refreshToken }),
+    revalidate: 0
+  });
+}
+
 export async function refreshAccessToken(refreshToken: string) {
   return apiFetch<{ accessToken: string }>("/auth/refresh", {
     method: "POST",
@@ -219,6 +261,46 @@ export async function updateTheme(
     token,
     revalidate: 0
   });
+}
+
+export async function chatParse(
+  token: string,
+  message: string
+): Promise<ChatParsed> {
+  return apiFetch<ChatParsed>("/chat/parse", {
+    method: "POST",
+    body: JSON.stringify({ message }),
+    token,
+    revalidate: 0
+  });
+}
+
+export async function chatSearch(
+  token: string,
+  title: string,
+  mediaType: string
+): Promise<{ results: ChatSearchItem[] }> {
+  return apiFetch<{ results: ChatSearchItem[] }>("/chat/search", {
+    method: "POST",
+    body: JSON.stringify({ title, mediaType }),
+    token,
+    revalidate: 0
+  });
+}
+
+export async function chatLog(
+  token: string,
+  payload: ChatLogPayload
+): Promise<{ success: boolean; logId: string; updated: boolean; title: string }> {
+  return apiFetch<{ success: boolean; logId: string; updated: boolean; title: string }>(
+    "/chat/log",
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+      token,
+      revalidate: 0
+    }
+  );
 }
 
 export function recentFirst(logs: Log[]) {

@@ -1,52 +1,129 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, CalendarDays, BookMarked } from "lucide-react";
 import Image from "next/image";
-import type { PublicUser } from "@/lib/types";
+import type { PublicUser, Log } from "@/lib/types";
 
-export function Bio({ user }: { user: PublicUser }) {
+function formatJoined(iso: string) {
+  return new Intl.DateTimeFormat("en", { month: "short", year: "numeric" }).format(new Date(iso));
+}
+
+function statsByType(logs: Log[]) {
+  const counts: Record<string, number> = {};
+  for (const log of logs) {
+    counts[log.mediaType] = (counts[log.mediaType] ?? 0) + 1;
+  }
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4);
+}
+
+export function Bio({
+  user,
+  logs
+}: {
+  user: PublicUser;
+  logs: Log[];
+}) {
+  const topTypes = statsByType(logs);
+
   return (
-    <section className="archive-shell mx-auto grid max-w-3xl justify-items-center gap-4 p-6 text-center md:p-8">
-      <div className="h-20 w-20 overflow-hidden border-2 border-ink bg-card shadow-[4px_4px_0_rgb(var(--ink))]">
-        {user.avatarUrl ? (
-          <Image
-            src={user.avatarUrl}
-            alt=""
-            width={96}
-            height={96}
-            unoptimized
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-3xl font-black text-accent">
-            {user.displayName.slice(0, 1)}
+    <aside className="archive-panel flex flex-col gap-0 overflow-hidden">
+      {/* Avatar + name header */}
+      <div className="border-b-2 border-ink p-4">
+        <div className="flex items-start gap-3">
+          <div className="h-14 w-14 shrink-0 overflow-hidden border-2 border-ink shadow-[3px_3px_0_rgb(var(--ink))]">
+            {user.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt=""
+                width={56}
+                height={56}
+                unoptimized
+                referrerPolicy="no-referrer"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-accent text-2xl font-black text-paper">
+                {user.displayName.slice(0, 1).toUpperCase()}
+              </div>
+            )}
           </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-black uppercase text-muted">/u/{user.username}</p>
+            <h1 className="mt-0.5 text-xl font-black uppercase leading-tight text-ink">
+              {user.displayName}
+            </h1>
+          </div>
+        </div>
+
+        {user.bio && (
+          <p className="mt-3 text-xs font-bold leading-5 text-ink">
+            {user.bio}
+          </p>
         )}
       </div>
 
-      <div>
-        <p className="stamp-label">
-          /u/{user.username}
-        </p>
-        <h1 className="mt-2 text-5xl font-black uppercase leading-none text-ink md:text-7xl">
-          {user.displayName}
-        </h1>
-        <p className="mx-auto mt-4 max-w-xl text-balance text-sm font-bold leading-6 text-ink md:text-base">
-          {user.bio}
-        </p>
-        {user.links.length ? (
-          <div className="mt-5 flex flex-wrap justify-center gap-2">
+      {/* Stats */}
+      <div className="grid grid-cols-2 border-b-2 border-ink">
+        <div className="border-r-2 border-ink p-3">
+          <p className="flex items-center gap-1 text-[10px] font-black uppercase text-muted">
+            <BookMarked className="h-3 w-3" aria-hidden="true" />
+            Entries
+          </p>
+          <p className="mt-0.5 text-2xl font-black text-ink">{logs.length}</p>
+        </div>
+        <div className="p-3">
+          <p className="flex items-center gap-1 text-[10px] font-black uppercase text-muted">
+            <CalendarDays className="h-3 w-3" aria-hidden="true" />
+            Since
+          </p>
+          <p className="mt-0.5 text-sm font-black uppercase text-ink">
+            {formatJoined(user.createdAt)}
+          </p>
+        </div>
+      </div>
+
+      {/* Top types */}
+      {topTypes.length > 0 && (
+        <div className="border-b-2 border-ink p-3">
+          <p className="mb-2 text-[10px] font-black uppercase text-muted">Shelf breakdown</p>
+          <div className="grid gap-1">
+            {topTypes.map(([type, count]) => (
+              <div key={type} className="flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase text-ink">{type}</span>
+                <span className="flex items-center gap-1">
+                  {/* Mini bar */}
+                  <span
+                    className="h-2 bg-accent border border-ink"
+                    style={{ width: `${Math.max(12, (count / logs.length) * 64)}px` }}
+                  />
+                  <span className="text-[10px] font-black text-muted">{count}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Links */}
+      {user.links.length > 0 && (
+        <div className="p-3">
+          <p className="mb-2 text-[10px] font-black uppercase text-muted">Links</p>
+          <div className="grid gap-1">
             {user.links.map((link) => (
               <a
                 key={`${link.label}-${link.url}`}
                 href={link.url}
-                className="pixel-button inline-flex items-center gap-1 px-2 py-1 text-xs font-black uppercase"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 border-2 border-ink bg-paper px-2 py-1 text-[10px] font-black uppercase text-ink hover:bg-accent hover:text-paper transition-colors"
               >
                 {link.label}
-                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                <ExternalLink className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
               </a>
             ))}
           </div>
-        ) : null}
-      </div>
-    </section>
+        </div>
+      )}
+    </aside>
   );
 }

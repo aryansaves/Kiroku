@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   BookOpen,
   Clapperboard,
@@ -5,7 +6,6 @@ import {
   PanelsTopLeft,
   Star
 } from "lucide-react";
-import Image from "next/image";
 import type { ElementType } from "react";
 import type { Log, MediaType } from "@/lib/types";
 
@@ -18,23 +18,85 @@ const typeIcons: Record<MediaType, ElementType> = {
   comic: PanelsTopLeft
 };
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric",
-    year: "numeric"
-  }).format(new Date(value));
+const statusDots: Record<string, string> = {
+  completed: "bg-green-600",
+  watching: "bg-accent",
+  rewatching: "bg-accent",
+  dropped: "bg-red-500",
+  planned: "bg-muted"
+};
+
+function ratingStars(rating: number) {
+  const full = Math.round(rating / 2);
+  return Array.from({ length: 5 }, (_, i) => (i < full ? "★" : "☆")).join("");
 }
 
-function progressLabel(log: Log) {
-  if (log.progress.episode) return `Episode ${log.progress.episode}`;
-  if (log.progress.chapter) return `Chapter ${log.progress.chapter}`;
-  if (log.progress.page) return `Page ${log.progress.page}`;
-  if (log.progress.percentage) return `${log.progress.percentage}%`;
-  return log.status;
+/** Compact card — letterboxd-style poster tile */
+export function LogCard({ log }: { log: Log }) {
+  const Icon = typeIcons[log.mediaType];
+  const dot = statusDots[log.status] ?? "bg-muted";
+
+  return (
+    <article
+      className="group relative border-2 border-ink bg-card shadow-[3px_3px_0_rgb(var(--ink))] hover:shadow-[1px_1px_0_rgb(var(--ink))] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-100"
+      title={`${log.title}${log.rating !== null ? ` · ${log.rating}/10` : ""} · ${log.status}`}
+    >
+      {/* Poster */}
+      <div className="relative aspect-[2/3] overflow-hidden border-b-2 border-ink bg-paper">
+        {log.coverImage ? (
+          <Image
+            src={log.coverImage}
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 14vw, (min-width: 640px) 20vw, 33vw"
+            unoptimized
+            className="object-cover grayscale-[15%] transition duration-200 group-hover:grayscale-0 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <div className="pixel-grid flex h-full flex-col items-center justify-center gap-2 p-2 text-center">
+            <Icon className="h-5 w-5 text-accent" aria-hidden="true" />
+            <span className="text-[9px] font-black uppercase leading-tight text-ink line-clamp-3">
+              {log.title}
+            </span>
+          </div>
+        )}
+
+        {/* Status dot */}
+        <span
+          className={`absolute right-1 top-1 h-2.5 w-2.5 border border-ink ${dot}`}
+          aria-label={log.status}
+        />
+
+        {/* Type badge on hover */}
+        <span className="absolute bottom-0 left-0 right-0 translate-y-full border-t-2 border-ink bg-ink px-1 py-0.5 text-[9px] font-black uppercase text-paper opacity-0 transition-all duration-150 group-hover:translate-y-0 group-hover:opacity-100 flex items-center gap-1">
+          <Icon className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
+          {log.mediaType}
+        </span>
+      </div>
+
+      {/* Info strip */}
+      <div className="p-1.5">
+        <p className="text-[9px] font-black uppercase leading-tight text-ink truncate">
+          {log.title}
+        </p>
+        {log.rating !== null ? (
+          <p className="mt-0.5 text-[8px] font-black text-accent tracking-tight">
+            {ratingStars(log.rating)}
+          </p>
+        ) : (
+          <p className="mt-0.5 flex items-center gap-1 text-[8px] font-black uppercase text-muted">
+            <Star className="h-2 w-2" aria-hidden="true" />
+            {log.status}
+          </p>
+        )}
+      </div>
+    </article>
+  );
 }
 
-export function LogCard({ log, featured = false }: { log: Log; featured?: boolean }) {
+/** Large featured card for the "recently logged" spotlight */
+export function LogCardFeatured({ log }: { log: Log }) {
   const Icon = typeIcons[log.mediaType];
   const credit =
     log.metadata.author ??
@@ -43,68 +105,50 @@ export function LogCard({ log, featured = false }: { log: Log; featured?: boolea
     (log.metadata.year ? String(log.metadata.year) : null);
 
   return (
-    <article
-      className={`group relative border-2 border-ink bg-card shadow-[6px_6px_0_rgb(var(--ink))] ${
-        featured ? "md:col-span-2 md:grid md:grid-cols-[minmax(180px,0.72fr)_1fr]" : ""
-      }`}
-    >
-      <div className="relative aspect-[3/4] overflow-hidden border-b-2 border-ink bg-paper md:border-b-0 md:border-r-2">
+    <article className="group relative flex gap-3 border-2 border-ink bg-card shadow-[4px_4px_0_rgb(var(--ink))]">
+      {/* Poster */}
+      <div className="relative w-20 shrink-0 overflow-hidden border-r-2 border-ink bg-paper">
         {log.coverImage ? (
           <Image
             src={log.coverImage}
             alt=""
             fill
-            sizes={featured ? "(min-width: 768px) 40vw, 100vw" : "(min-width: 1280px) 30vw, (min-width: 640px) 50vw, 100vw"}
+            sizes="80px"
             unoptimized
-            className="object-cover grayscale-[25%] contrast-125 transition duration-200 group-hover:grayscale-0"
+            className="object-cover"
             loading="lazy"
           />
         ) : (
-          <div className="pixel-grid flex h-full flex-col items-center justify-center gap-4 p-6 text-center">
-            <Icon className="h-9 w-9 text-accent" aria-hidden="true" />
-            <span className="max-w-[12rem] text-balance text-sm font-black uppercase text-ink">
-              {log.title}
-            </span>
+          <div className="flex h-full items-center justify-center p-2">
+            <Icon className="h-6 w-6 text-accent" aria-hidden="true" />
           </div>
         )}
-        <span className="absolute left-2 top-2 inline-flex items-center gap-1 border-2 border-ink bg-accent px-2 py-1 text-[10px] font-black uppercase text-paper">
-          <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+        <span className="absolute left-1 top-1 inline-flex items-center border border-ink bg-accent px-1 text-[8px] font-black uppercase text-paper">
           {log.mediaType}
         </span>
       </div>
 
-      <div className="flex min-h-[210px] flex-col p-4">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[11px] font-black uppercase text-muted">
-              {formatDate(log.createdAt)}
-            </p>
-            <h3 className="mt-2 text-xl font-black uppercase leading-tight text-ink">
-              {log.title}
-            </h3>
-          </div>
-          {log.rating !== null ? (
-            <span className="inline-flex shrink-0 items-center gap-1 border-2 border-ink bg-paper px-2 py-1 text-xs font-black text-accent shadow-[2px_2px_0_rgb(var(--ink))]">
-              <Star className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
-              {log.rating}
-            </span>
-          ) : null}
-        </div>
-
-        {credit ? (
-          <p className="mt-2 text-xs font-bold uppercase text-muted">{credit}</p>
-        ) : null}
-
-        {log.notes ? (
-          <p className="mt-4 line-clamp-4 text-sm font-bold leading-6 text-ink">
-            {log.notes}
+      {/* Details */}
+      <div className="flex min-w-0 flex-col justify-center py-3 pr-3">
+        <p className="text-[10px] font-black uppercase text-muted">{log.status}</p>
+        <h3 className="mt-0.5 text-sm font-black uppercase leading-tight text-ink truncate">
+          {log.title}
+        </h3>
+        {credit && (
+          <p className="mt-0.5 text-[10px] font-bold uppercase text-muted truncate">{credit}</p>
+        )}
+        {log.notes && (
+          <p className="mt-1.5 line-clamp-2 text-[11px] font-bold leading-4 text-ink italic">
+            "{log.notes}"
           </p>
-        ) : null}
-
-        <div className="mt-auto flex items-center justify-between border-t-2 border-ink pt-4 text-xs font-black uppercase">
-          <span className="text-ink">{progressLabel(log)}</span>
-          <span className="status-badge">{log.status}</span>
-        </div>
+        )}
+        {log.rating !== null && (
+          <p className="mt-1 text-[10px] font-black text-accent">
+            {"★".repeat(Math.round(log.rating / 2))}
+            {"☆".repeat(5 - Math.round(log.rating / 2))}
+            <span className="ml-1 text-muted">({log.rating}/10)</span>
+          </p>
+        )}
       </div>
     </article>
   );

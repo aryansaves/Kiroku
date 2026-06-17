@@ -131,3 +131,52 @@ export type ThemeUpdate = Pick<
   Theme,
   "colorScheme" | "font" | "layout" | "customCss" | "guestbookEnabled"
 >;
+
+export type ChatParsed = {
+  mediaType: MediaType;
+  title: string | null;
+  action: "log" | "update" | "query";
+  status: LogStatus;
+  progress: {
+    episode: number | null;
+    chapter: number | null;
+    page: number | null;
+    percentage: number | null;
+  };
+  rating: number | null;
+  notes: string | null;
+  confidence: "high" | "low";
+};
+
+export type ChatSearchItem = {
+  canonicalTitle: string;
+  coverImage: string | null;
+  mediaType: string;
+  year: number | null;
+  externalIds: {
+    anilistId: number | null;
+    malId: number | null;
+    tmdbId: number | null;
+  };
+};
+
+export type ChatLogPayload = {
+  mediaType: MediaType;
+  status: LogStatus;
+  title: string;
+  coverImage: string | null;
+  rating: number | null;
+  notes: string | null;
+  progress: {
+    episode: number | null;
+    chapter: number | null;
+    page: number | null;
+    percentage: number | null;
+  };
+  externalIds: {
+    anilistId: number | null;
+    malId: number | null;
+    tmdbId: number | null;
+  };
+  forceNew?: boolean;
+};

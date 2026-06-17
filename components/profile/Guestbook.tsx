@@ -52,10 +52,10 @@ export function Guestbook({
     <section className="archive-panel p-4">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-base font-black uppercase text-ink">Guestbook</h2>
-        <p className="text-xs font-bold text-muted">Leave a note.</p>
+          <h2 className="text-sm font-black uppercase text-ink">Guestbook</h2>
+          <p className="text-xs font-bold text-muted">Leave a note.</p>
+        </div>
       </div>
-    </div>
 
       {entries.length ? (
         <div className="mt-5 grid gap-3">

@@ -1,6 +1,7 @@
 import { LogCard } from "@/components/journal/LogCard";
 import type { JournalLayout, Log } from "@/lib/types";
 
+/** Legacy grid used by older routes — prefer LogShelf for the profile page */
 export function LogGrid({ logs, layout }: { logs: Log[]; layout: JournalLayout }) {
   if (!logs.length) {
     return (
@@ -10,26 +11,10 @@ export function LogGrid({ logs, layout }: { logs: Log[]; layout: JournalLayout }
     );
   }
 
-  if (layout === "feed") {
-    return (
-      <div className="mx-auto grid max-w-2xl gap-5">
-        {logs.map((log, index) => (
-          <LogCard key={log._id} log={log} featured={index === 0} />
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div
-      className={
-        layout === "masonry"
-          ? "mx-auto max-w-4xl columns-1 gap-5 sm:columns-2 [&>*]:mb-5 [&>*]:break-inside-avoid"
-          : "mx-auto grid max-w-4xl gap-5 sm:grid-cols-2"
-      }
-    >
-      {logs.map((log, index) => (
-        <LogCard key={log._id} log={log} featured={layout === "grid" && index === 0} />
+    <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 lg:grid-cols-6">
+      {logs.map((log) => (
+        <LogCard key={log._id} log={log} />
       ))}
     </div>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Palette } from "lucide-react";
 import { ProfileSettingsForm } from "@/components/settings/ProfileSettingsForm";
+import { QuickLogBarSection } from "@/components/chat/QuickLogBarSection";
 
 export const metadata: Metadata = {
   title: "Settings"
@@ -12,18 +13,27 @@ export default function SettingsPage() {
     <main className="archive-grid relative min-h-screen px-4 py-4 md:px-6">
       <div className="scanlines absolute inset-0" aria-hidden="true" />
       <div className="relative z-10 mx-auto max-w-3xl">
-        <header className="archive-topbar flex items-center justify-between px-3 py-2">
+        <header className="archive-topbar flex items-center justify-between gap-3 px-3 py-2">
           <Link href="/" className="text-base font-black uppercase tracking-wider">
             KIROKU
           </Link>
+          {/* Quick log bar — horizontal, inline in header area */}
+          <div className="flex-1 max-w-md hidden md:block">
+            <QuickLogBarSection />
+          </div>
           <Link
             href="/settings/theme"
-            className="pixel-button inline-flex items-center gap-2 px-3 py-2 text-xs font-black uppercase"
+            className="pixel-button shrink-0 inline-flex items-center gap-2 px-3 py-2 text-xs font-black uppercase"
           >
             Theme
             <Palette className="h-4 w-4" aria-hidden="true" />
           </Link>
         </header>
+
+        {/* Quick log bar for mobile */}
+        <div className="md:hidden mt-4">
+           <QuickLogBarSection />
+        </div>
 
         <section className="py-10">
           <p className="stamp-label">settings</p>
