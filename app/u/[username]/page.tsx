@@ -13,11 +13,10 @@ import type { MediaType } from "@/lib/types";
 const mediaTypes: MediaType[] = [
   "anime",
   "movie",
+  "series",
   "book",
   "manga",
-  "game",
-  "music",
-  "podcast"
+  "comic"
 ];
 
 function normalizeType(value: string | string[] | undefined) {
@@ -28,9 +27,10 @@ function normalizeType(value: string | string[] | undefined) {
 export async function generateMetadata({
   params
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }): Promise<Metadata> {
-  const user = await getPublicUser(params.username);
+  const { username } = await params;
+  const user = await getPublicUser(username);
   return {
     title: `${user.displayName}'s journal`,
     description: user.bio,
@@ -46,25 +46,30 @@ export default async function UserJournalPage({
   params,
   searchParams
 }: {
-  params: { username: string };
-  searchParams: { type?: string | string[] };
+  params: Promise<{ username: string }>;
+  searchParams: Promise<{ type?: string | string[] }>;
 }) {
-  const type = normalizeType(searchParams.type);
+  const [{ username }, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams
+  ]);
+  const type = normalizeType(resolvedSearchParams.type);
   const [user, paginatedLogs] = await Promise.all([
-    getPublicUser(params.username),
-    getUserLogs({ username: params.username, type, limit: 30 })
+    getPublicUser(username),
+    getUserLogs({ username, type, limit: 30 })
   ]);
   const logs = recentFirst(paginatedLogs.logs);
 
   return (
     <main
-      className="pixel-grid relative min-h-screen overflow-hidden px-4 py-4 md:px-6"
+      className="archive-grid relative min-h-screen overflow-hidden px-4 py-4 md:px-6"
       style={themeVariables(user.theme)}
     >
+      <div className="scanlines absolute inset-0" aria-hidden="true" />
       <StickerLayer stickers={user.theme.stickers} />
       <div className="relative z-10 mx-auto max-w-5xl">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-2 border-ink bg-paper px-3 py-2">
-          <Link href="/" className="text-base font-black uppercase text-ink">
+        <header className="archive-topbar flex flex-wrap items-center justify-between gap-3 px-3 py-2">
+          <Link href="/" className="text-base font-black uppercase tracking-wider text-ink">
             KIROKU
           </Link>
           <SongPlayer nowPlaying={user.theme.nowPlaying} />
@@ -74,13 +79,13 @@ export default async function UserJournalPage({
           <Bio user={user} />
         </section>
 
-        <div className="journal-rule mb-6" />
+        <div className="pixel-divider mb-8" />
 
         <section className="grid gap-8">
           <div className="min-w-0">
             <div className="mb-5 grid justify-items-center gap-4 text-center">
               <div>
-                <p className="text-xs font-black uppercase text-accent">
+                <p className="stamp-label">
                   {paginatedLogs.total} entries
                 </p>
                 <h2 className="mt-2 text-3xl font-black uppercase text-ink">

@@ -21,10 +21,11 @@ const features = [
 
 export default function HomePage() {
   return (
-    <main className="pixel-grid min-h-screen px-4 py-4 md:px-6">
-      <section className="mx-auto flex min-h-[calc(100vh-32px)] max-w-5xl flex-col">
-        <nav className="flex items-center justify-between border-2 border-ink bg-paper px-3 py-2">
-          <Link href="/" className="text-base font-black uppercase">
+    <main className="archive-grid relative min-h-screen px-4 py-4 md:px-6">
+      <div className="scanlines absolute inset-0 z-10" aria-hidden="true" />
+      <section className="relative z-20 mx-auto flex min-h-[calc(100vh-32px)] max-w-5xl flex-col">
+        <nav className="archive-topbar flex items-center justify-between px-3 py-2">
+          <Link href="/" className="text-base font-black uppercase tracking-wider">
             KIROKU
           </Link>
           <div className="flex items-center gap-2">
@@ -39,22 +40,23 @@ export default function HomePage() {
               className="pixel-button-solid inline-flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase"
             >
               Demo
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight className="link-arrow h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </nav>
 
         <div className="grid flex-1 place-items-center py-10">
-          <div className="w-full max-w-3xl text-center">
-            <p className="mx-auto inline-block border-2 border-ink bg-accent px-2 py-1 text-xs font-black uppercase text-paper">
+          <div className="archive-shell w-full max-w-3xl p-6 text-center md:p-10">
+            <p className="stamp-label">
               telegram in / page out
             </p>
             <h1 className="mt-5 text-6xl font-black uppercase leading-none text-ink md:text-8xl">
-              Media log
+              Shelf signal
             </h1>
-            <p className="mx-auto mt-5 max-w-xl text-balance text-base font-bold leading-7 text-ink md:text-lg">
-              A tiny public shelf for what you watched, read, played, heard, or
-              dropped.
+            <div className="pixel-divider-light mx-auto mt-6 max-w-sm" />
+            <p className="mx-auto mt-6 max-w-xl text-balance text-base font-bold leading-7 text-ink md:text-lg">
+              A public media journal that feels like a stamped desk file:
+              fast pages, sharp filters, real covers, and bot-written entries.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
@@ -62,7 +64,7 @@ export default function HomePage() {
                 className="pixel-button-solid inline-flex items-center gap-2 px-5 py-3 text-sm font-black uppercase"
               >
                 Open journal
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <ArrowRight className="link-arrow h-4 w-4" aria-hidden="true" />
               </Link>
               <Link
                 href="/settings/theme"
@@ -76,9 +78,9 @@ export default function HomePage() {
               {["anime", "books", "film"].map((item, index) => (
                 <div
                   key={item}
-                  className={index === 1 ? "pixel-panel-accent p-3" : "pixel-panel p-3"}
+                  className={index === 1 ? "pixel-panel-accent p-3" : "archive-panel p-3"}
                 >
-                  <div className="aspect-square border-2 border-current bg-current/0" />
+                  <div className="aspect-square border-2 border-current bg-current/5" />
                   <p className="mt-2 text-xs font-black uppercase">{item}</p>
                 </div>
               ))}
@@ -86,9 +88,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="grid gap-3 border-2 border-ink bg-paper p-3 md:grid-cols-3">
+        <div className="archive-panel grid gap-3 p-3 md:grid-cols-3">
           {features.map((feature) => (
-            <div key={feature.title} className="border-2 border-ink p-3">
+            <div key={feature.title} className="border-2 border-ink bg-card p-3">
               <feature.icon className="h-5 w-5 text-accent" aria-hidden="true" />
               <h2 className="mt-3 text-sm font-black uppercase text-ink">
                 {feature.title}

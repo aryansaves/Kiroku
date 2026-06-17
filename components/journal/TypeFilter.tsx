@@ -5,11 +5,10 @@ const filters: Array<{ label: string; value?: MediaType }> = [
   { label: "All" },
   { label: "Anime", value: "anime" },
   { label: "Movies", value: "movie" },
+  { label: "Series", value: "series" },
   { label: "Books", value: "book" },
   { label: "Manga", value: "manga" },
-  { label: "Games", value: "game" },
-  { label: "Music", value: "music" },
-  { label: "Podcasts", value: "podcast" }
+  { label: "Comics", value: "comic" }
 ];
 
 export function TypeFilter({

@@ -17,10 +17,10 @@ export const demoUser: PublicUser = {
   },
   theme: {
     colorScheme: {
-      background: "#fff7d6",
-      text: "#121212",
-      accent: "#ff4b1f",
-      card: "#fff7d6"
+      background: "#faf8f0",
+      text: "#16141c",
+      accent: "#dc8719",
+      card: "#f5f2e8"
     },
     font: "var(--font-serif)",
     layout: "grid",
@@ -28,7 +28,7 @@ export const demoUser: PublicUser = {
     stickers: [
       {
         id: "star-note",
-        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cpath fill='%23ff4b1f' d='M16 16h16v16H16zM32 32h16v16H32zM48 48h16v16H48zM64 64h16v16H64zM64 16h16v16H64zM48 32h16v16H48zM32 48h16v16H32zM16 64h16v16H16z'/%3E%3C/svg%3E",
+        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cpath fill='%23dc8719' d='M16 16h16v16H16zM32 32h16v16H32zM48 48h16v16H48zM64 64h16v16H64zM64 16h16v16H64zM48 32h16v16H48zM32 48h16v16H32zM16 64h16v16H16z'/%3E%3C/svg%3E",
         x: 28,
         y: 102,
         size: 54,
@@ -110,20 +110,20 @@ export const demoLogs: Log[] = [
   },
   {
     _id: "hollow-knight",
-    mediaType: "game",
+    mediaType: "comic",
     status: "planned",
     rating: null,
-    notes: "Saved for a long rainy weekend.",
+    notes: "Saved for a quiet weekend.",
     progress: { episode: null, chapter: null, page: null, percentage: null },
-    title: "Hollow Knight",
+    title: "Maus",
     coverImage: null,
     metadata: {
       studio: null,
-      year: 2017,
+      year: 1991,
       episodes: null,
       director: null,
       runtime: null,
-      author: null
+      author: "Art Spiegelman"
     },
     createdAt: "2026-05-28T10:20:00.000Z",
     updatedAt: "2026-05-28T10:20:00.000Z"

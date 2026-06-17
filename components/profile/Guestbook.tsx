@@ -1,9 +1,10 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Send } from "lucide-react";
-import { postGuestbookEntry } from "@/lib/api";
+import { getGuestbookEntries, postGuestbookEntry } from "@/lib/api";
+import type { GuestbookEntry } from "@/lib/types";
 
 export function Guestbook({
   username,
@@ -14,9 +15,18 @@ export function Guestbook({
 }) {
   const [visitorName, setVisitorName] = useState("");
   const [message, setMessage] = useState("");
+  const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
+
+  useEffect(() => {
+    if (!enabled) return;
+
+    getGuestbookEntries(username)
+      .then((payload) => setEntries(payload.entries))
+      .catch(() => setEntries([]));
+  }, [enabled, username]);
 
   if (!enabled) return null;
 
@@ -28,9 +38,10 @@ export function Guestbook({
 
     setStatus("sending");
     try {
-      await postGuestbookEntry(username, { visitorName: name, message: body });
+      const entry = await postGuestbookEntry(username, { visitorName: name, message: body });
       setVisitorName("");
       setMessage("");
+      setEntries((current) => [entry as GuestbookEntry, ...current].slice(0, 8));
       setStatus("sent");
     } catch {
       setStatus("error");
@@ -38,13 +49,36 @@ export function Guestbook({
   }
 
   return (
-    <section className="pixel-panel p-4">
+    <section className="archive-panel p-4">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h2 className="text-base font-black uppercase text-ink">Guestbook</h2>
-          <p className="text-xs font-bold text-muted">Leave a note.</p>
-        </div>
+        <p className="text-xs font-bold text-muted">Leave a note.</p>
       </div>
+    </div>
+
+      {entries.length ? (
+        <div className="mt-5 grid gap-3">
+          {entries.map((entry) => (
+            <article key={entry._id} className="border-2 border-ink bg-paper p-3">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-xs font-black uppercase text-accent">
+                  {entry.visitorName}
+                </p>
+                <time className="text-[10px] font-black uppercase text-muted">
+                  {new Intl.DateTimeFormat("en", {
+                    month: "short",
+                    day: "numeric"
+                  }).format(new Date(entry.createdAt))}
+                </time>
+              </div>
+              <p className="mt-2 text-sm font-bold leading-5 text-ink">
+                {entry.message}
+              </p>
+            </article>
+          ))}
+        </div>
+      ) : null}
 
       <form onSubmit={submitGuestbook} className="mt-5 grid gap-3">
         <input
@@ -53,7 +87,7 @@ export function Guestbook({
           onChange={(event) => setVisitorName(event.target.value)}
           placeholder="Name"
           maxLength={48}
-          className="border-2 border-ink bg-paper px-3 py-2 text-sm font-bold outline-none placeholder:text-muted focus:bg-accent focus:text-paper"
+          className="field-input"
         />
         <textarea
           name="message"
@@ -62,7 +96,7 @@ export function Guestbook({
           placeholder="Message"
           maxLength={280}
           rows={4}
-          className="resize-none border-2 border-ink bg-paper px-3 py-2 text-sm font-bold outline-none placeholder:text-muted focus:bg-accent focus:text-paper"
+          className="field-input resize-none"
         />
         <button
           type="submit"

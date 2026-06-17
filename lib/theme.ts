@@ -13,10 +13,10 @@ export function themeVariables(theme: Theme) {
   const { background, text, accent, card } = theme.colorScheme;
 
   return {
-    "--paper": hexToRgb(background, "255 247 214"),
-    "--ink": hexToRgb(text, "18 18 18"),
-    "--accent": hexToRgb(accent, "255 75 31"),
-    "--card": hexToRgb(card, "255 247 214"),
-    "--muted": "89 80 67"
+    "--paper": hexToRgb(background, "250 248 240"),
+    "--ink": hexToRgb(text, "22 20 28"),
+    "--accent": hexToRgb(accent, "220 135 25"),
+    "--card": hexToRgb(card, "245 242 232"),
+    "--muted": "135 118 95"
   } as CSSProperties;
 }

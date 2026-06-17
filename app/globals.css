@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --paper: 255 247 214;
-  --ink: 18 18 18;
-  --accent: 255 75 31;
-  --card: 255 247 214;
-  --muted: 89 80 67;
+  --paper: 250 248 240;
+  --ink: 22 20 28;
+  --accent: 220 135 25;
+  --card: 245 242 232;
+  --muted: 135 118 95;
   --font-serif: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
 }
@@ -108,4 +108,161 @@ textarea {
     linear-gradient(rgb(var(--ink) / 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgb(var(--ink) / 0.08) 1px, transparent 1px);
   background-size: 16px 16px;
+}
+
+.archive-grid {
+  background-color: rgb(var(--paper));
+  background-image:
+    linear-gradient(rgb(var(--ink) / 0.08) 2px, transparent 2px),
+    linear-gradient(90deg, rgb(var(--ink) / 0.06) 1px, transparent 1px),
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 18px,
+      rgb(var(--accent) / 0.08) 18px 20px
+    );
+  background-size: 42px 42px, 14px 14px, 100% 100%;
+}
+
+.archive-shell,
+.archive-panel,
+.archive-topbar {
+  border: 2px solid rgb(var(--ink));
+  background: rgb(var(--card));
+  box-shadow:
+    8px 8px 0 rgb(var(--ink)),
+    inset 0 0 0 3px rgb(var(--paper));
+}
+
+.archive-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.archive-shell::after {
+  content: "";
+  position: absolute;
+  inset: auto 22px 22px auto;
+  width: 160px;
+  height: 160px;
+  border: 2px solid rgb(var(--ink));
+  background:
+    linear-gradient(90deg, rgb(var(--ink)) 0 2px, transparent 2px 100%),
+    linear-gradient(rgb(var(--ink)) 0 2px, transparent 2px 100%),
+    rgb(var(--accent));
+  background-size: 18px 18px;
+  opacity: 0.16;
+  transform: rotate(-4deg);
+}
+
+.stamp-label {
+  display: inline-block;
+  border: 2px solid rgb(var(--accent));
+  color: rgb(var(--accent));
+  background: rgb(var(--paper));
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  transform: rotate(-1deg);
+}
+
+.field-input {
+  border: 2px solid rgb(var(--ink));
+  background: rgb(var(--paper));
+  color: rgb(var(--ink));
+  padding: 0.65rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  outline: none;
+}
+
+.field-input::placeholder {
+  color: rgb(var(--muted));
+}
+
+.field-input:focus {
+  background: rgb(var(--accent));
+  color: rgb(var(--paper));
+}
+
+/* ─── Augmented styles ─────────────────────────────────── */
+
+.scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgb(var(--ink) / 0.03) 2px,
+    rgb(var(--ink) / 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+.pixel-divider {
+  width: 100%;
+  height: 4px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgb(var(--accent)) 0 8px,
+      transparent 8px 12px
+    ),
+    rgb(var(--ink));
+}
+
+.pixel-divider-light {
+  width: 100%;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgb(var(--ink) / 0.22) 0 6px,
+    transparent 6px 10px
+  );
+}
+
+.status-badge {
+  border: 2px solid rgb(var(--ink));
+  background: rgb(var(--accent));
+  color: rgb(var(--paper));
+  padding: 0.15rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.archive-shell::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgb(var(--ink) / 0.1);
+  pointer-events: none;
+}
+
+.archive-shell::after {
+  content: "";
+  position: absolute;
+  inset: auto 18px 18px auto;
+  width: 140px;
+  height: 140px;
+  border: 2px solid rgb(var(--ink));
+  background:
+    linear-gradient(90deg, rgb(var(--ink)) 0 2px, transparent 2px 100%),
+    linear-gradient(rgb(var(--ink)) 0 2px, transparent 2px 100%),
+    rgb(var(--accent));
+  background-size: 16px 16px;
+  opacity: 0.12;
+  transform: rotate(-3deg);
+}
+
+.link-arrow {
+  display: inline-block;
+  transition: transform 150ms ease;
+}
+
+a:hover .link-arrow,
+button:hover .link-arrow,
+.group:hover .link-arrow {
+  transform: translate(2px, -2px);
 }

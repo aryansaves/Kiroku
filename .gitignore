@@ -1,16 +1,27 @@
-# Ignore node_modules folder
+# Dependencies
 node_modules/
-README.md
-# Ignore environment variable files
-.env
-*.env
 
-# Ignore system files
+# Environment (keep .env.example)
+.env
+.env*.local
+
+# System files
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
 
-# Ignore build output
+# Build output
 .next/
+out/
+dist/
 
-# Ignore log files
+# Logs
 *.log
+
+# IDE
+.vscode/
+.idea/
+
+# Debug
+npm-debug.log*

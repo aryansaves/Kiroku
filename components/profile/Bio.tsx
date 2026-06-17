@@ -4,7 +4,7 @@ import type { PublicUser } from "@/lib/types";
 
 export function Bio({ user }: { user: PublicUser }) {
   return (
-    <section className="mx-auto grid max-w-3xl justify-items-center gap-4 text-center">
+    <section className="archive-shell mx-auto grid max-w-3xl justify-items-center gap-4 p-6 text-center md:p-8">
       <div className="h-20 w-20 overflow-hidden border-2 border-ink bg-card shadow-[4px_4px_0_rgb(var(--ink))]">
         {user.avatarUrl ? (
           <Image
@@ -23,7 +23,7 @@ export function Bio({ user }: { user: PublicUser }) {
       </div>
 
       <div>
-        <p className="text-xs font-black uppercase text-accent">
+        <p className="stamp-label">
           /u/{user.username}
         </p>
         <h1 className="mt-2 text-5xl font-black uppercase leading-none text-ink md:text-7xl">

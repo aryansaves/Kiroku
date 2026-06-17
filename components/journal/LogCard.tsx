@@ -1,10 +1,8 @@
 import {
   BookOpen,
   Clapperboard,
-  Disc3,
-  Gamepad2,
-  Headphones,
   MonitorPlay,
+  PanelsTopLeft,
   Star
 } from "lucide-react";
 import Image from "next/image";
@@ -14,11 +12,10 @@ import type { Log, MediaType } from "@/lib/types";
 const typeIcons: Record<MediaType, ElementType> = {
   anime: MonitorPlay,
   movie: Clapperboard,
+  series: MonitorPlay,
   book: BookOpen,
   manga: BookOpen,
-  game: Gamepad2,
-  music: Disc3,
-  podcast: Headphones
+  comic: PanelsTopLeft
 };
 
 function formatDate(value: string) {
@@ -106,9 +103,7 @@ export function LogCard({ log, featured = false }: { log: Log; featured?: boolea
 
         <div className="mt-auto flex items-center justify-between border-t-2 border-ink pt-4 text-xs font-black uppercase">
           <span className="text-ink">{progressLabel(log)}</span>
-          <span className="border-2 border-ink bg-accent px-2 py-1 text-paper">
-            {log.status}
-          </span>
+          <span className="status-badge">{log.status}</span>
         </div>
       </div>
     </article>

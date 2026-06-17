@@ -1,11 +1,10 @@
 export type MediaType =
   | "anime"
   | "movie"
+  | "series"
   | "book"
   | "manga"
-  | "game"
-  | "music"
-  | "podcast";
+  | "comic";
 
 export type LogStatus =
   | "watching"
@@ -58,6 +57,18 @@ export type PublicUser = {
   createdAt: string;
 };
 
+export type AuthUser = {
+  id: string;
+  username: string;
+  displayName: string;
+};
+
+export type AuthSession = {
+  accessToken: string;
+  refreshToken: string;
+  user: AuthUser;
+};
+
 export type Log = {
   _id: string;
   mediaType: MediaType;
@@ -103,3 +114,20 @@ export type GuestbookEntry = {
   message: string;
   createdAt: string;
 };
+
+export type GuestbookEntries = {
+  entries: GuestbookEntry[];
+};
+
+export type ProfileUpdate = {
+  displayName: string;
+  bio: string;
+  avatarUrl: string | null;
+  links: Array<{ label: string; url: string }>;
+  nowPlaying?: Theme["nowPlaying"];
+};
+
+export type ThemeUpdate = Pick<
+  Theme,
+  "colorScheme" | "font" | "layout" | "customCss" | "guestbookEnabled"
+>;
