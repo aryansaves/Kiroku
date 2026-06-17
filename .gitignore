@@ -15,6 +15,7 @@ Thumbs.db
 .next/
 out/
 dist/
+*.tsbuildinfo
 
 # Logs
 *.log
