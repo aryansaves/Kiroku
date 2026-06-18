@@ -15,7 +15,9 @@ import type {
 } from "@/lib/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-const USE_DEMO = process.env.NEXT_PUBLIC_USE_DEMO_DATA !== "false";
+// Only use demo data when explicitly opted in. Defaults to FALSE so production
+// API failures surface as real errors instead of silently showing mock content.
+const USE_DEMO = process.env.NEXT_PUBLIC_USE_DEMO_DATA === "true";
 
 type FetchOptions = {
   revalidate?: number;
