@@ -125,7 +125,9 @@ export async function apiFetch<T>(
   }
 
   if (!response.ok) {
-    throw new Error(`API request failed: ${response.status} ${path}`);
+    let body = "";
+    try { body = await response.text(); } catch { /* ignore */ }
+    throw new Error(`API request failed: ${response.status} ${path} — ${body}`);
   }
 
   if (response.status === 204) return undefined as T;

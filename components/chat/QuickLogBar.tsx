@@ -83,13 +83,13 @@ export function QuickLogBar({ onLogged }: { onLogged?: () => void }) {
         setState({ stage: "disambiguate", parsed, results });
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "";
+      const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("401")) {
         setState({ stage: "error", message: "Session expired — please log out and sign in again." });
-      } else if (msg.includes("Failed to fetch") || msg.includes("NetworkError")) {
+      } else if (msg.includes("Failed to fetch") || msg.includes("NetworkError") || msg.includes("Load failed")) {
         setState({ stage: "error", message: "Can't reach the server. Check your connection." });
       } else {
-        setState({ stage: "error", message: `Error: ${msg || "Something went wrong."}` });
+        setState({ stage: "error", message: msg.slice(0, 120) });
       }
     }
   }
