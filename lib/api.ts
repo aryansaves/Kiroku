@@ -106,6 +106,8 @@ export async function getPublicUser(username: string): Promise<PublicUser> {
   try {
     return await apiFetch<PublicUser>(`/users/${username}`, { revalidate: 0 });
   } catch (error) {
+    // Always fall back to demo data for the /u/demo showcase route
+    if (username === "demo") return { ...demoUser, username: "demo" };
     if (USE_DEMO) return { ...demoUser, username };
     throw error;
   }
@@ -129,11 +131,17 @@ export async function getUserLogs(params: {
     );
     return normalizePaginatedLogs(payload);
   } catch (error) {
+    // Always fall back to demo data for the showcase route
+    if (params.username === "demo") {
+      const logs = params.type
+        ? demoLogs.filter((l) => l.mediaType === params.type)
+        : demoLogs;
+      return { logs, page: 1, limit: params.limit ?? 60, total: logs.length, hasMore: false };
+    }
     if (!USE_DEMO) throw error;
     const logs = params.type
       ? demoLogs.filter((log) => log.mediaType === params.type)
       : demoLogs;
-
     return {
       logs,
       page: params.page ?? 1,

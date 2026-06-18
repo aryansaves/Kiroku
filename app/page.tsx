@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MessageSquare, Palette, Radio } from "lucide-react";
 import { ThemePaletteSwitcher } from "@/components/theme/ThemePaletteSwitcher";
+import { HomeNavAuth } from "@/components/auth/HomeNavAuth";
 
 const features = [
   {
@@ -31,19 +32,7 @@ export default function HomePage() {
           </Link>
           <div className="flex items-center gap-3">
             <ThemePaletteSwitcher terse />
-            <Link
-              href="/login"
-              className="px-3 py-2 text-xs font-bold uppercase text-ink hover:bg-ink hover:text-paper"
-            >
-              Login
-            </Link>
-            <Link
-              href="/u/demo"
-              className="pixel-button-solid inline-flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase"
-            >
-              Demo
-              <ArrowRight className="link-arrow h-4 w-4" aria-hidden="true" />
-            </Link>
+            <HomeNavAuth />
           </div>
         </nav>
 

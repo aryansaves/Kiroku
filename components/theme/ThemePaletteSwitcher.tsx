@@ -91,14 +91,19 @@ function applyColors(colors: ColorSet) {
 }
 
 export function ThemePaletteSwitcher({ terse = false }: { terse?: boolean }) {
-  const [active, setActive] = useState(() => {
-    if (typeof window === "undefined") return palettes[0].name;
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored && palettes.some((p) => p.name === stored)
-      ? stored
-      : palettes[0].name;
-  });
+  // Always start with default — avoids SSR/client hydration mismatch.
+  // The stored palette is applied by ThemeProvider on mount.
+  const [active, setActive] = useState(palettes[0].name);
 
+  // Sync UI indicator to stored palette after first client render
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && palettes.some((p) => p.name === stored)) {
+      setActive(stored);
+    }
+  }, []);
+
+  // Apply colors whenever the active palette changes
   useEffect(() => {
     const palette = palettes.find((p) => p.name === active);
     if (palette) applyColors(palette.colors);

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LoginPanel } from "@/components/auth/LoginPanel";
+import { SessionRedirect } from "@/components/auth/SessionRedirect";
 
 export const metadata: Metadata = {
   title: "Login"
@@ -14,6 +15,7 @@ export default function LoginPage() {
 
   return (
     <main className="archive-grid relative min-h-screen px-4 py-4 md:px-6">
+      <SessionRedirect />
       <div className="scanlines absolute inset-0" aria-hidden="true" />
       <div className="relative z-10">
         <LoginPanel

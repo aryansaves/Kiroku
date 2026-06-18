@@ -6,10 +6,8 @@ import { SongPlayer } from "@/components/profile/SongPlayer";
 import { LogShelf } from "@/components/journal/LogShelf";
 import { StickerLayer } from "@/components/stickers/StickerLayer";
 import { ThemePaletteSwitcher } from "@/components/theme/ThemePaletteSwitcher";
-// QuickLogBarSection is a client component that reads localStorage
 import { QuickLogBarSection } from "@/components/chat/QuickLogBarSection";
 import { getPublicUser, getUserLogs, recentFirst } from "@/lib/api";
-import { themeVariables } from "@/lib/theme";
 import type { MediaType } from "@/lib/types";
 
 const mediaTypes: MediaType[] = ["anime", "movie", "series", "book", "manga", "comic"];
@@ -56,15 +54,12 @@ export default async function UserJournalPage({
   const logs = recentFirst(paginatedLogs.logs);
 
   return (
-    <main
-      className="archive-grid relative min-h-screen overflow-hidden px-3 py-3 md:px-4"
-      style={themeVariables(user.theme)}
-    >
+    <main className="archive-grid relative min-h-screen px-4 py-4 pb-12 md:px-6">
       <div className="scanlines absolute inset-0" aria-hidden="true" />
       <StickerLayer stickers={user.theme.stickers} />
 
-      {/* ── Page wrapper — expanded max-width ── */}
-      <div className="relative z-10 mx-auto max-w-5xl">
+      {/* Full-width wrapper */}
+      <div className="relative z-10 mx-auto max-w-7xl">
 
         {/* ── Top bar ── */}
         <header className="archive-topbar mb-4 flex items-center justify-between px-3 py-2">
@@ -78,7 +73,7 @@ export default async function UserJournalPage({
         </header>
 
         {/* ── Two-column layout ── */}
-        <div className="grid gap-4 lg:grid-cols-[240px_1fr]">
+        <div className="mt-4 grid gap-5 lg:grid-cols-[320px_1fr]">
 
           {/* ─── Left sidebar ─── */}
           <div className="flex flex-col gap-4">
@@ -93,24 +88,24 @@ export default async function UserJournalPage({
           </div>
 
           {/* ─── Right: shelf ─── */}
-          <div className="archive-panel p-3">
-            {/* Quick log bar — sticky at top of shelf */}
-            <div className="relative mb-3 z-20">
+          <div className="archive-panel flex flex-col gap-4 p-4">
+            {/* Quick log bar */}
+            <div className="relative z-20">
               <QuickLogBarSection />
             </div>
 
             {/* Shelf header */}
-            <div className="mb-3 flex items-baseline justify-between border-b-2 border-ink pb-2">
+            <div className="flex items-center justify-between border-b-2 border-ink pb-3">
               <div>
-                <p className="text-[10px] font-black uppercase text-muted">shelf</p>
-                <h2 className="text-lg font-black uppercase leading-none text-ink">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted">shelf</p>
+                <h2 className="text-2xl font-black uppercase leading-none text-ink">
                   {user.displayName}
                 </h2>
               </div>
               <span className="stamp-label">{paginatedLogs.total} entries</span>
             </div>
 
-            {/* Client shelf — owns filter state + refresh */}
+            {/* Client shelf */}
             <LogShelf
               username={user.username}
               initialLogs={logs}

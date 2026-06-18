@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 // Inline palette data — mirrors ThemePaletteSwitcher palettes exactly
+// Runs synchronously before React hydrates — prevents palette flash on hard reload
 const PALETTE_SCRIPT = `
 try {
   var palettes = [
@@ -38,10 +40,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light" />
-        {/* Runs synchronously before React — zero-flash palette restoration */}
+        {/* Space Grotesk — editorial, distinct, strong */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+        {/* Runs synchronously before React — zero-flash palette restoration on hard reload */}
         <script dangerouslySetInnerHTML={{ __html: PALETTE_SCRIPT }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {/* Re-applies palette on every client-side navigation */}
+        <ThemeProvider />
+        {children}
+      </body>
     </html>
   );
 }
