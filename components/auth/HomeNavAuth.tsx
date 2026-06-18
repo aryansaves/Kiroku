@@ -16,7 +16,6 @@ export function HomeNavAuth() {
   }, []);
 
   if (!mounted) {
-    // Render an empty placeholder of similar size to prevent layout shift
     return <div className="h-9 w-32" />;
   }
 
@@ -60,5 +59,34 @@ export function HomeNavAuth() {
         <ArrowRight className="link-arrow h-3.5 w-3.5" aria-hidden="true" />
       </Link>
     </div>
+  );
+}
+
+/**
+ * Smart CTA button: logged-in → /u/username, guest → /u/demo
+ */
+export function OpenJournalCTA() {
+  const [href, setHref] = useState("/u/demo");
+  const [label, setLabel] = useState("Open journal");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const session = readSession();
+    if (session?.user?.username) {
+      setHref(`/u/${session.user.username}`);
+      setLabel("My shelf");
+    }
+    setMounted(true);
+  }, []);
+
+  return (
+    <Link
+      href={href}
+      className="pixel-button-solid inline-flex items-center gap-2 px-5 py-3 text-sm font-black uppercase"
+      style={{ opacity: mounted ? 1 : 0.7 }}
+    >
+      {label}
+      <ArrowRight className="link-arrow h-4 w-4" aria-hidden="true" />
+    </Link>
   );
 }

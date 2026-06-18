@@ -1,4 +1,5 @@
 import { demoLogs, demoUser } from "@/lib/mock-data";
+import { readSession, saveSession } from "@/lib/client-auth";
 import type {
   AuthSession,
   ChatLogPayload,
@@ -75,16 +76,9 @@ function normalizePaginatedLogs(payload: ApiPaginatedLogs): PaginatedLogs {
   };
 }
 
-export async function apiFetch<T>(
-  path: string,
-  options: FetchOptions & RequestInit = {}
-): Promise<T> {
-  if (!API_BASE_URL) {
-    throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
-  }
-
-  const { revalidate = 60, token, headers, ...init } = options;
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+async function doFetch(path: string, options: FetchOptions & RequestInit, token?: string): Promise<Response> {
+  const { revalidate = 60, headers, ...init } = options;
+  return fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers: {
       "Content-Type": "application/json",
@@ -93,6 +87,40 @@ export async function apiFetch<T>(
     },
     next: { revalidate }
   });
+}
+
+export async function apiFetch<T>(
+  path: string,
+  options: FetchOptions & RequestInit = {}
+): Promise<T> {
+  if (!API_BASE_URL) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured");
+  }
+
+  const { token } = options;
+  let response = await doFetch(path, options, token);
+
+  // Auto-refresh expired tokens (client-side only)
+  if (response.status === 401 && token && typeof window !== "undefined") {
+    try {
+      const session = readSession();
+      if (session?.refreshToken) {
+        const refreshed = await doFetch("/auth/refresh", {
+          method: "POST",
+          body: JSON.stringify({ refreshToken: session.refreshToken }),
+          revalidate: 0,
+        });
+        if (refreshed.ok) {
+          const { accessToken } = await refreshed.json() as { accessToken: string };
+          saveSession({ ...session, accessToken });
+          // Retry original request with new token
+          response = await doFetch(path, options, accessToken);
+        }
+      }
+    } catch {
+      // refresh failed — fall through and throw below
+    }
+  }
 
   if (!response.ok) {
     throw new Error(`API request failed: ${response.status} ${path}`);

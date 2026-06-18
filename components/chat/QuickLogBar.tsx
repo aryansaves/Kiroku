@@ -82,8 +82,15 @@ export function QuickLogBar({ onLogged }: { onLogged?: () => void }) {
       } else {
         setState({ stage: "disambiguate", parsed, results });
       }
-    } catch {
-      setState({ stage: "error", message: "Connection failed. Please try again." });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.includes("401")) {
+        setState({ stage: "error", message: "Session expired — please log out and sign in again." });
+      } else if (msg.includes("Failed to fetch") || msg.includes("NetworkError")) {
+        setState({ stage: "error", message: "Can't reach the server. Check your connection." });
+      } else {
+        setState({ stage: "error", message: `Error: ${msg || "Something went wrong."}` });
+      }
     }
   }
 
@@ -105,8 +112,13 @@ export function QuickLogBar({ onLogged }: { onLogged?: () => void }) {
       onLogged?.();
       // Auto-reset after 4 seconds
       setTimeout(() => setState({ stage: "idle" }), 4000);
-    } catch {
-      setState({ stage: "error", message: "Failed to save. Please try again." });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.includes("401")) {
+        setState({ stage: "error", message: "Session expired — please log out and sign in again." });
+      } else {
+        setState({ stage: "error", message: "Failed to save. Please try again." });
+      }
     }
   }
 

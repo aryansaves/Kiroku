@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MessageSquare, Palette, Radio } from "lucide-react";
 import { ThemePaletteSwitcher } from "@/components/theme/ThemePaletteSwitcher";
-import { HomeNavAuth } from "@/components/auth/HomeNavAuth";
+import { HomeNavAuth, OpenJournalCTA } from "@/components/auth/HomeNavAuth";
 
 const features = [
   {
@@ -42,7 +42,7 @@ export default function HomePage() {
               log anything, share everything
             </p>
             <h1 className="mt-5 text-6xl font-black uppercase leading-none text-ink md:text-8xl">
-              Shelf signal
+              Kiroku
             </h1>
             <div className="pixel-divider-light mx-auto mt-6 max-w-sm" />
             <p className="mx-auto mt-6 max-w-xl text-balance text-base font-bold leading-7 text-ink md:text-lg">
@@ -51,13 +51,7 @@ export default function HomePage() {
               directly on the web.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link
-                href="/u/demo"
-                className="pixel-button-solid inline-flex items-center gap-2 px-5 py-3 text-sm font-black uppercase"
-              >
-                Open journal
-                <ArrowRight className="link-arrow h-4 w-4" aria-hidden="true" />
-              </Link>
+              <OpenJournalCTA />
               <Link
                 href="/settings/theme"
                 className="pixel-button px-5 py-3 text-sm font-black uppercase"
