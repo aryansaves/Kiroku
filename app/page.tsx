@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, MessageSquare, Palette, Radio } from "lucide-react";
+import { MessageSquare, Palette, Radio } from "lucide-react";
 import { ThemePaletteSwitcher } from "@/components/theme/ThemePaletteSwitcher";
 import { HomeNavAuth, OpenJournalCTA } from "@/components/auth/HomeNavAuth";
 

@@ -3,7 +3,7 @@
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, KeyRound, MessageCircle } from "lucide-react";
+import { ArrowRight, KeyRound } from "lucide-react";
 import { devLogin, telegramLogin, googleAuthUrl } from "@/lib/api";
 import { saveSession } from "@/lib/client-auth";
 

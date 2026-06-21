@@ -1,8 +1,8 @@
 import { LogCard } from "@/components/journal/LogCard";
-import type { JournalLayout, Log } from "@/lib/types";
+import type { Log } from "@/lib/types";
 
 /** Legacy grid used by older routes — prefer LogShelf for the profile page */
-export function LogGrid({ logs, layout }: { logs: Log[]; layout: JournalLayout }) {
+export function LogGrid({ logs }: { logs: Log[] }) {
   if (!logs.length) {
     return (
       <div className="pixel-panel p-10 text-center text-sm font-black uppercase text-muted">

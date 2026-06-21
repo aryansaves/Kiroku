@@ -101,11 +101,21 @@ export function QuickLogBar({ onLogged }: { onLogged?: () => void }) {
         mediaType: selected.mediaType as MediaType,
         status: parsed.status,
         title: selected.canonicalTitle,
-        coverImage: selected.coverImage,
-        rating: parsed.rating,
-        notes: parsed.notes,
-        progress: parsed.progress,
-        externalIds: selected.externalIds,
+        coverImage: selected.coverImage ?? null,
+        rating: parsed.rating ?? null,
+        notes: parsed.notes ?? null,
+        // Always send fully-shaped objects — undefined values break Zod on the server
+        progress: {
+          episode:    parsed.progress?.episode    ?? null,
+          chapter:    parsed.progress?.chapter    ?? null,
+          page:       parsed.progress?.page       ?? null,
+          percentage: parsed.progress?.percentage ?? null,
+        },
+        externalIds: {
+          anilistId: selected.externalIds?.anilistId ?? null,
+          malId:     selected.externalIds?.malId     ?? null,
+          tmdbId:    selected.externalIds?.tmdbId    ?? null,
+        },
       });
       setMessage("");
       setState({ stage: "success", title: selected.canonicalTitle, cover: selected.coverImage });
